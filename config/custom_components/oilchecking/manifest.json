@@ -3,6 +3,7 @@
     "name": "oilchecking",
     "codeowners": ["@smechs"],
     "dependencies": [],
+    "config_flow": true,
     "documentation": "https://www.home-assistant.io/integrations/oilchecking",
     "homekit": {},
     "iot_class": "local_polling",

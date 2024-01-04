@@ -14,7 +14,7 @@ from __future__ import annotations
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
+from homeassistant.const import CONF_API_KEY, Platform
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
@@ -27,8 +27,12 @@ PLATFORMS = [Platform.SENSOR]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Oil Info as config entry."""
+    conf_name = entry.data[CONF_API_KEY]
+
     my_api = OilInformationService()  # hass.data[DOMAIN][entry.entry_id]
     coordinator = MyCoordinator(hass, my_api)
+
+    _LOGGER.info('Setup config entry %s:', conf_name)
 
     await coordinator.async_config_entry_first_refresh()
 
