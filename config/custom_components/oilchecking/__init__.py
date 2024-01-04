@@ -32,7 +32,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     my_api = OilInformationService()  # hass.data[DOMAIN][entry.entry_id]
     coordinator = MyCoordinator(hass, my_api)
 
-    _LOGGER.info('Setup config entry %s:', conf_name)
+    _LOGGER.info('Setup config entry: %s', conf_name)
 
     await coordinator.async_config_entry_first_refresh()
 

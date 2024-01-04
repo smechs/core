@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 from homeassistant.components.light import LightEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -11,6 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .coordinator import MyCoordinator
 from .oilinformationservice import OilInformationService
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
@@ -19,6 +22,8 @@ async def async_setup_entry(
     # assuming API object stored here by __init__.py
     my_api = OilInformationService()  # hass.data[DOMAIN][entry.entry_id]
     coordinator = MyCoordinator(hass, my_api)
+
+    _LOGGER.info("Setup entry with my_api and coordinator")
 
     # Fetch initial data so we have data when entities subscribe
     #
@@ -55,6 +60,7 @@ class MyEntity(CoordinatorEntity, LightEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
+        _LOGGER.info("Handling update")
         self._attr_is_on = self.coordinator.data[self.idx]["state"]
         self.async_write_ha_state()
 

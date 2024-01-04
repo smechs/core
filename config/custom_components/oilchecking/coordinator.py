@@ -9,7 +9,7 @@ import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .oilinformationservice import OilInformationService
+from .oilinformationservice import OilInformationService, OilPriceInformationDto
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class MyCoordinator(DataUpdateCoordinator):
         )
         self.my_api: OilInformationService = my_api
 
-    async def _async_update_data(self):
+    async def _async_update_data(self) -> OilPriceInformationDto:
         """Fetch data from API endpoint.
 
         This is the place to pre-process the data to lookup tables

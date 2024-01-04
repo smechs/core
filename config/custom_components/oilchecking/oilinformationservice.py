@@ -1,7 +1,10 @@
 """Initializing oil information service."""
+import logging
+
 import requests
 from requests import Response
 
+_LOGGER = logging.getLogger(__name__)
 
 class OilInformationConfiguration:
     """Oil information configuration."""
@@ -53,6 +56,8 @@ class OilInformationService:
         # response: Response = self._send_request()
         oilpricedto: OilPriceInformationDto = OilPriceInformationDto()
         oilpricedto.oil_price_dtos.append(OilPriceDto(22, "dealer"))
+
+        _LOGGER.info("Oil price retrieved from: %s", oilpricedto.oil_price_dtos[0].dealer)
         return oilpricedto
 
         # return self._map_response(response=response)
