@@ -1,5 +1,8 @@
-from typing import Any
+"Config flow file."
+
 import logging
+from typing import Any
+
 import voluptuous as vol
 
 from homeassistant import config_entries

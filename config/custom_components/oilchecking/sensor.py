@@ -1,22 +1,16 @@
-"Sensor file"
+"Sensor file."
 
 from __future__ import annotations
 
-from asyncio import timeout
-import logging
-
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.components.light import LightEntity
-from homeassistant.core import callback, HomeAssistant
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity
-)
-
-from .const import DOMAIN
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .coordinator import MyCoordinator
 from .oilinformationservice import OilInformationService
+
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback

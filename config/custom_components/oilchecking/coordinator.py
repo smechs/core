@@ -1,3 +1,5 @@
+"""My custom coordinator."""
+
 from __future__ import annotations
 
 from asyncio import timeout
@@ -5,13 +7,9 @@ from datetime import timedelta
 import logging
 
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import (
-    DataUpdateCoordinator,
-    UpdateFailed,
-)
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .oilinformationservice import OilInformationService
-from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 

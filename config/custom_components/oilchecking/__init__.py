@@ -11,20 +11,15 @@ oilchecking:
 """
 from __future__ import annotations
 
-from asyncio import timeout
-from datetime import timedelta
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, callback
 from homeassistant.const import Platform
+from homeassistant.core import HomeAssistant
 
-
-from .sensor import MyEntity
-from .coordinator import MyCoordinator
-
-from .oilinformationservice import OilInformationService
 from .const import DOMAIN
+from .coordinator import MyCoordinator
+from .oilinformationservice import OilInformationService
 
 _LOGGER = logging.getLogger(__name__)
 
