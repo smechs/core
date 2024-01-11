@@ -28,7 +28,7 @@ class MyCoordinator(DataUpdateCoordinator):
         )
         self.my_api: OilInformationService = my_api
 
-    async def _async_update_data(self) -> OilPriceInformationDto:
+    async def _async_update_data(self) -> dict[str, OilPriceInformationDto]:
         """Fetch data from API endpoint.
 
         This is the place to pre-process the data to lookup tables
@@ -42,7 +42,7 @@ class MyCoordinator(DataUpdateCoordinator):
                 # Note: using context is not required if there is no need or ability to limit
                 # data retrieved from API.
                 # listening_idx = set(self.async_contexts())
-                return await self.my_api.request_oil_information()
+                return {"result": self.my_api.request_oil_information()}
         # except ApiAuthError as err:
         # Raising ConfigEntryAuthFailed will cancel future updates
         # and start a config flow with SOURCE_REAUTH (async_step_reauth)

@@ -33,7 +33,6 @@ class OilPriceDto:
         self.price = price
         self.dealer = dealer
 
-
 class OilPriceInformationDto:
     """Oil price information dto."""
 

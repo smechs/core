@@ -56,12 +56,14 @@ class MyEntity(CoordinatorEntity, LightEntity):
         """Pass coordinator to CoordinatorEntity."""
         super().__init__(coordinator, context=idx)
         self.idx = idx
+        self.coordinator = coordinator
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        _LOGGER.info("Handling update")
-        self._attr_is_on = self.coordinator.data[self.idx]["state"]
+        data = self.coordinator.data
+        _LOGGER.info("Handling update: %s", data.get("result").oil_price_dtos[0].dealer)
+        self._attr_is_on = True
         self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs):
