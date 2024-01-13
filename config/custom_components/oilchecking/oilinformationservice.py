@@ -1,8 +1,8 @@
 """Initializing oil information service."""
 import logging
 
-import requests
-from requests import Response
+import httpx
+from httpx import Response
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class OilInformationConfiguration:
         "prod": "normal",
         "hose": "fortyMetre",
         "short_vehicle": "withTrailer",
-        "deliveryTimes": "normal",
+        "deliveryTimes": "normal"
     }
 
 
@@ -50,16 +50,12 @@ class OilInformationService:
         """Initialize oil information service."""
         self.name: str = "oilservice2"
 
-    def request_oil_information(self) -> OilPriceInformationDto:
+    async def request_oil_information(self) -> OilPriceInformationDto:
         """Request oil info."""
-        # response: Response = self._send_request()
-        oilpricedto: OilPriceInformationDto = OilPriceInformationDto()
-        oilpricedto.oil_price_dtos.append(OilPriceDto(22, "dealer"))
+        oilpricedto: OilPriceInformationDto = self._map_response(await self._send_request())
 
-        _LOGGER.info("Oil price retrieved from: %s", oilpricedto.oil_price_dtos[0].dealer)
+        _LOGGER.info("Oil price information retrieved with %s entries", str(len(oilpricedto.oil_price_dtos)))
         return oilpricedto
-
-        # return self._map_response(response=response)
 
     def _map_response(self, response: Response) -> OilPriceInformationDto:
         oil_price_information_dto: OilPriceInformationDto = OilPriceInformationDto()
@@ -73,11 +69,14 @@ class OilInformationService:
             )
             oil_price_information_dto.oil_price_dtos.append(oil_price_dto)
 
+        _LOGGER.info("Mapped response")
+
         return oil_price_information_dto
 
-    def _send_request(self) -> Response:
-        return requests.post(
-            url=self.oil_information_configuration.url,
-            json=self.oil_information_configuration.payload,
-            timeout=15,
-        )
+    async def _send_request(self) -> Response:
+        async with httpx.AsyncClient() as client:
+            _LOGGER.info("Sending request with url %s", self.oil_information_configuration.url)
+            response = await client.post(url=self.oil_information_configuration.url, json=self.oil_information_configuration.payload)
+            _LOGGER.info("Receiving data")
+
+            return response
