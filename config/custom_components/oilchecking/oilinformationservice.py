@@ -36,7 +36,9 @@ class OilPriceDto:
 class OilPriceInformationDto:
     """Oil price information dto."""
 
-    oil_price_dtos: list[OilPriceDto] = []
+    def __init__(self) -> None:
+        """Init."""
+        self.oil_price_dtos: list[OilPriceDto] = []
 
 
 class OilInformationService:

@@ -62,7 +62,7 @@ class MyEntity(CoordinatorEntity, LightEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         data = self.coordinator.data
-        _LOGGER.info("Handling update: %s", data.get("result").oil_price_dtos[0].dealer)
+        _LOGGER.info("Handling update: %s", len(data.get("result").oil_price_dtos))
         self._attr_is_on = True
         self.async_write_ha_state()
 

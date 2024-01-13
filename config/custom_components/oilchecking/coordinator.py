@@ -43,6 +43,7 @@ class MyCoordinator(DataUpdateCoordinator):
                 # data retrieved from API.
                 # listening_idx = set(self.async_contexts())
                 results = await self.my_api.request_oil_information()
+                _LOGGER.info("Number of results: %s", len(results.oil_price_dtos))
                 return {"result": results}
         # except ApiAuthError as err:
         # Raising ConfigEntryAuthFailed will cancel future updates
