@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import logging
+from uuid import uuid4
 
 from homeassistant.components.number import (
     NumberDeviceClass,
@@ -13,9 +14,11 @@ from homeassistant.components.number import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .const import DOMAIN
 from .coordinator import MyCoordinator
 from .oilinformationservice import OilInformationService
 
@@ -93,6 +96,24 @@ class MyEntity(CoordinatorEntity, NumberEntity):
         self.coordinator = coordinator
         self.device_class = NumberDeviceClass.VOLUME_STORAGE
         self.entity_description = description
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        return DeviceInfo(
+            identifiers={
+                # Serial numbers are unique identifiers within a specific domain
+                (DOMAIN, self.unique_id)
+            },
+            name=self.name,
+            manufacturer="mechs",
+            model="oildevice"
+        )
+
+    @property
+    def unique_id(self):
+        """Return the ID of this entity."""
+        return str(uuid4())
 
     @callback
     def _handle_coordinator_update(self) -> None:
