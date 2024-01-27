@@ -55,8 +55,8 @@ class OilInformationService:
     async def request_oil_information(self) -> OilPriceInformationDto:
         """Request oil info."""
         oilpricedto: OilPriceInformationDto = self._map_response(await self._send_request())
-
         _LOGGER.info("Oil price information retrieved with %s entries", str(len(oilpricedto.oil_price_dtos)))
+
         return oilpricedto
 
     def _map_response(self, response: Response) -> OilPriceInformationDto:
@@ -71,7 +71,12 @@ class OilInformationService:
             )
             oil_price_information_dto.oil_price_dtos.append(oil_price_dto)
 
-        _LOGGER.info("Mapped response")
+        # Sorting ascending and having lowest price as first entry
+        oil_price_information_dto.oil_price_dtos = sorted(
+            oil_price_information_dto.oil_price_dtos,
+            key=lambda oil_price_dto: oil_price_dto.price)
+
+        _LOGGER.info("Mapped oil prices in the following order: %s", [oil_price_dto.price for oil_price_dto in oil_price_information_dto.oil_price_dtos])
 
         return oil_price_information_dto
 

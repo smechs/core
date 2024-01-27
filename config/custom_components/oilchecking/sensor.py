@@ -19,45 +19,34 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import MyCoordinator
+from .coordinator import OilInformationCoordinator
 from .oilinformationservice import OilInformationService
 
 _LOGGER = logging.getLogger(__name__)
+
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> bool:
     """Config entry example."""
     # assuming API object stored here by __init__.py
-    my_api = OilInformationService()  # hass.data[DOMAIN][entry.entry_id]
-    coordinator = MyCoordinator(hass, my_api)
+    oil_information_service = OilInformationService()
+    oil_info_coordinator = OilInformationCoordinator(hass, oil_information_service)
 
-    _LOGGER.info("Setup entry with my_api and coordinator")
+    _LOGGER.info("Setup entry with oil information service and coordinator")
 
-    # Fetch initial data so we have data when entities subscribe
-    #
-    # If the refresh fails, async_config_entry_first_refresh will
-    # raise ConfigEntryNotReady and setup will try again later
-    #
-    # If you do not want to retry setup on failure, use
-    # coordinator.async_refresh() instead
-    #
-    await coordinator.async_config_entry_first_refresh()
+    await oil_info_coordinator.async_config_entry_first_refresh()
 
-    entities: list[MyEntity] = []
+    entities: list[OilInfoEntity] = []
 
     entities.extend(
-            [
-                MyEntity(coordinator, 2, description)
-                for description in NUMBER_TYPES
-            ]
-        )
-
-    async_add_entities(
-        entities
+        [OilInfoEntity(oil_info_coordinator, 2, description) for description in NUMBER_TYPES]
     )
 
+    async_add_entities(entities)
+
     return True
+
 
 @dataclass(frozen=True)
 class OilInfoNumberEntityDescription(NumberEntityDescription):
@@ -77,7 +66,8 @@ NUMBER_TYPES: list[OilInfoNumberEntityDescription] = [
     ),
 ]
 
-class MyEntity(CoordinatorEntity, NumberEntity):
+
+class OilInfoEntity(CoordinatorEntity, NumberEntity):
     """An entity using CoordinatorEntity.
 
     The CoordinatorEntity class provides:
@@ -85,7 +75,6 @@ class MyEntity(CoordinatorEntity, NumberEntity):
       async_update
       async_added_to_hass
       available
-
     """
 
     def __init__(self, coordinator, idx, description) -> None:
@@ -107,7 +96,7 @@ class MyEntity(CoordinatorEntity, NumberEntity):
             },
             name=self.name,
             manufacturer="mechs",
-            model="oildevice"
+            model="oildevice",
         )
 
     @property
@@ -119,14 +108,10 @@ class MyEntity(CoordinatorEntity, NumberEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         data = self.coordinator.data
-        _LOGGER.info("Handling update: %s", len(data.get("result").oil_price_dtos))
+        _LOGGER.info("Handling oil info update: %s entries", len(data.get("result").oil_price_dtos))
         self._attr_native_value = data.get("result").oil_price_dtos[0].price
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
-        # Do the turning on.
-        # ...
-
-        # Update the data
         await self.coordinator.async_request_refresh()

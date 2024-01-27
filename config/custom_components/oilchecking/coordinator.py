@@ -13,20 +13,21 @@ from .oilinformationservice import OilInformationService, OilPriceInformationDto
 
 _LOGGER = logging.getLogger(__name__)
 
-class MyCoordinator(DataUpdateCoordinator):
+
+class OilInformationCoordinator(DataUpdateCoordinator):
     """My custom coordinator."""
 
-    def __init__(self, hass: HomeAssistant, my_api: OilInformationService) -> None:
+    def __init__(self, hass: HomeAssistant, oil_information_service: OilInformationService) -> None:
         """Initialize my coordinator."""
         super().__init__(
             hass,
             _LOGGER,
             # Name of the data. For logging purposes.
-            name="My sensor",
+            name="OilInfoSensor",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=30),
+            update_interval=timedelta(seconds=60),
         )
-        self.my_api: OilInformationService = my_api
+        self.my_api: OilInformationService = oil_information_service
 
     async def _async_update_data(self) -> dict[str, OilPriceInformationDto]:
         """Fetch data from API endpoint.
@@ -35,19 +36,8 @@ class MyCoordinator(DataUpdateCoordinator):
         so entities can quickly look up their data.
         """
         try:
-            # Note: asyncio.TimeoutError and aiohttp.ClientError are already
-            # handled by the data update coordinator.
             async with timeout(10):
-                # Grab active context variables to limit data required to be fetched from API
-                # Note: using context is not required if there is no need or ability to limit
-                # data retrieved from API.
-                # listening_idx = set(self.async_contexts())
-                results = await self.my_api.request_oil_information()
-                _LOGGER.info("Number of results: %s", len(results.oil_price_dtos))
+                results: OilPriceInformationDto = await self.my_api.request_oil_information()
                 return {"result": results}
-        # except ApiAuthError as err:
-        # Raising ConfigEntryAuthFailed will cancel future updates
-        # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-        # raise ConfigEntryAuthFailed from err
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err
