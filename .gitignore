@@ -1,6 +1,7 @@
-/config
+**/config/*
 #config2/*
-!/config/custom_components
+!**/config/custom_components
+
 
 tests/testing_config/deps
 tests/testing_config/home-assistant.log*
@@ -11,6 +12,7 @@ data/
 
 # Translations
 homeassistant/components/*/translations
+
 
 # Hide sublime text stuff
 *.sublime-project

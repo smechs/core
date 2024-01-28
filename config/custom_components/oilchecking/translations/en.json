@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up oil information service",
+        "description": "Set up oil information service",
+        "data": {
+          "name": "Name of the service",
+          "entity_id": "Id of the service",
+          "room": "Room the service serves for"
+        },
+        "data_description": {
+          "name": "Name of the service",
+          "entity_id": "Entity id",
+          "roome": "Location of the service"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]"
+    },
+    "abort": {
+      "existing_instance_updated": "Updated existing configuration.",
+      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]"
+    }
+  }
+}
