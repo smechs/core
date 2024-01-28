@@ -22,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_NAME, default=DEFAULT_NAME, description="Name"): str,
-        vol.Required(CONF_ENTITY_ID, default=DEFAULT_NAME, description="Entity Id"): str,
+        vol.Required(CONF_ENTITY_ID, description="Entity Id"): str,
         vol.Required(CONF_ROOM, default=DEFAULT_ROOM, description="Room"): str
     }
 )
