@@ -52,7 +52,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             if not errors:
                     return self.async_create_entry(
-                        title=user_input[CONF_ENTITY_ID], data=user_input
+                        title=user_input[CONF_NAME], data=user_input
                     )
 
         return self.async_show_form(
